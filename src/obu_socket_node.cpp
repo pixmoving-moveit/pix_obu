@@ -11,13 +11,13 @@ int main(int argc, char** argv) {
     rclcpp::init(argc, argv);
     auto node = rclcpp::Node::make_shared("obu_server_node");
     // 创建UDP服务器实例
-    udp_server udp_server("127.0.0.1", 8751);
+    udp_server udp_server("192.168.1.102", 7966);
     data_process data_process_(node);
 
     while(rclcpp::ok()){
         
-        udp_server.send_to_client(data_process_.packed_data(),29+data_process_.get_string().length());
-        std::cout<<"send over"<<std::endl;
+        // udp_server.send_to_client(data_process_.packed_data(),29+data_process_.get_string().length());
+        // std::cout<<"send over"<<std::endl;
         data_process_.parse_data(udp_server.receive_data());
         std::cout<<"receive over"<<std::endl;
         rclcpp::spin_some(node);
