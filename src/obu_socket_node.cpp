@@ -18,8 +18,13 @@ int main(int argc, char** argv) {
         
         // udp_server.send_to_client(data_process_.packed_data(),29+data_process_.get_string().length());
         // std::cout<<"send over"<<std::endl;
-        data_process_.parse_data(udp_server.receive_data());
-        std::cout<<"receive over"<<std::endl;
+        std::vector<uint8_t> received_data= udp_server.receive_data();
+        std::cout<<sizeof(received_data)<<std::endl;
+        if (sizeof(received_data)>28){
+            data_process_.parse_data(received_data);
+            std::cout<<"receive over"<<std::endl;
+        }
+
         rclcpp::spin_some(node);
         sleep(1);
     }
