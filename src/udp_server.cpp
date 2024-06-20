@@ -16,8 +16,8 @@ udp_server::udp_server(const std::string& serverAddress, int serverPort) {
     // // 设置客户端地址
     memset(&client_address, 0, sizeof(client_address));
     client_address.sin_family = AF_INET;
-    client_address.sin_port = htons(9886); // 目标端口
-    client_address.sin_addr.s_addr = inet_addr("127.0.0.2"); // 目标 IP 地址
+    // client_address.sin_port = htons(9886); // 目标端口
+    // client_address.sin_addr.s_addr = inet_addr("127.0.0.2"); // 目标 IP 地址
 
     // 将套接字与服务器地址绑定
     if (bind(socket_fd_, (struct sockaddr*)&server_address_, sizeof(server_address_)) == -1) {
@@ -40,14 +40,23 @@ std::vector<uint8_t> udp_server::receive_data(){
                                          (struct sockaddr*)&client_address, &client_address_len_);
     if (bytes_received == -1) {
         std::cerr << "Error: Send failed.bytesReceived:" <<bytes_received<< std::endl;
+    }else{
+        // char client_ip[INET_ADDRSTRLEN];
+        // inet_ntop(AF_INET, &(client_address.sin_addr), client_ip, INET_ADDRSTRLEN);
+        // std::cout << "Received data from " << client_ip << ":" << ntohs(client_address.sin_port) << std::endl;
+
+        // 输出接收到的数据
+        // std::cout << "Received data (" << bytes_received << " bytes): ";
+        // for (ssize_t i = 0; i < bytes_received; ++i) {
+        //     printf("%02x ", buffer[i]);  // 以十六进制格式输出每个字节
+        // }
+        std::vector<uint8_t> received_data(buffer, buffer + bytes_received);
+        return received_data;
     }
-    
-    std::vector<uint8_t> received_data(buffer, buffer + bytes_received);
-    return received_data;
+    // return 0;
 }
 
 void udp_server::send_to_client(std::vector<uint8_t> message , size_t len_) {
-    std::cout<<"std::"<<message[1]<<std::endl;
     ssize_t bytes_sent = sendto(socket_fd_, message.data(),len_, 0,
                                (struct sockaddr*)&client_address, sizeof(client_address));
     if (bytes_sent == -1) {

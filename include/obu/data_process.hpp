@@ -24,7 +24,7 @@ struct Message
     uint32_t reserved=0xffffffff;
     uint16_t message_length=0;
     std::string message_body;
-    uint16_t check_code=0x0005;
+    uint8_t check_code=0x05;
     Message() = default;
     operator std::vector<uint8_t>() const;
     Message& operator=(const std::vector<uint8_t>& byte_stream);
